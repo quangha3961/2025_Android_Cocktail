@@ -2,4 +2,11 @@
 <resources>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+    
+    <!-- Custom colors -->
+    <color name="gray_medium">#FF808080</color>
+    <color name="header_gradient_start">#FF4A90E2</color>
+    <color name="header_gradient_end">#FF357ABD</color>
+    <color name="coral_pink">#FFFF6B6B</color>
+    <color name="red_light">#FFFF4444</color>
 </resources>
