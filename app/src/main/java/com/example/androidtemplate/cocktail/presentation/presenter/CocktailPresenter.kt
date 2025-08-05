@@ -3,6 +3,7 @@ package com.example.androidtemplate.cocktail.presentation.presenter
 import com.example.androidtemplate.base.BasePresenter
 import com.example.androidtemplate.cocktail.data.repository.ICocktailRepository
 import com.example.androidtemplate.cocktail.presentation.contract.CocktailContract
+import com.example.androidtemplate.cocktail.data.model.Cocktail
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.cancel
@@ -35,7 +36,7 @@ class CocktailPresenter(
         }
     }
 
-    override fun onCocktailClicked(cocktail: com.example.androidtemplate.cocktail.data.model.Cocktail) {
+    override fun onCocktailClicked(cocktail: Cocktail) {
         if (isViewAttached()) {
             getView()?.showCocktailDetail(cocktail)
         }

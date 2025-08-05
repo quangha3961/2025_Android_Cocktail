@@ -11,6 +11,7 @@ import com.example.androidtemplate.cocktail.presentation.adapter.CocktailAdapter
 import com.example.androidtemplate.cocktail.presentation.contract.CocktailContract
 import com.example.androidtemplate.cocktail.presentation.presenter.CocktailPresenter
 import com.example.androidtemplate.databinding.ActivityCocktailBinding
+import com.example.androidtemplate.cocktail.data.model.Cocktail
 
 class CocktailActivity : BaseActivity<ActivityCocktailBinding>(), CocktailContract.View {
 
@@ -45,11 +46,11 @@ class CocktailActivity : BaseActivity<ActivityCocktailBinding>(), CocktailContra
         }
     }
 
-    override fun showCocktails(cocktails: List<com.example.androidtemplate.cocktail.data.model.Cocktail>) {
+    override fun showCocktails(cocktails: List<Cocktail>) {
         adapter.submitList(cocktails)
     }
 
-    override fun showCocktailDetail(cocktail: com.example.androidtemplate.cocktail.data.model.Cocktail) {
+    override fun showCocktailDetail(cocktail: Cocktail) {
         Toast.makeText(
             this,
             "Selected: ${cocktail.name}",

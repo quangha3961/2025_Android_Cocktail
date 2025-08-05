@@ -1,6 +1,7 @@
 package com.example.androidtemplate.cocktail.data.datasource
 
 import com.example.androidtemplate.cocktail.data.model.Cocktail
+import kotlinx.coroutines.delay
 
 interface CocktailDataSource {
     suspend fun getCocktails(): List<Cocktail>
@@ -16,7 +17,7 @@ class CocktailLocalDataSource : CocktailDataSource {
 
     override suspend fun getCocktails(): List<Cocktail> {
         // Simulate network delay
-        kotlinx.coroutines.delay(NETWORK_DELAY_MS)
+        delay(NETWORK_DELAY_MS)
         return listOf(
             Cocktail(
                 id = "1",
@@ -62,7 +63,7 @@ class CocktailLocalDataSource : CocktailDataSource {
     }
 
     override suspend fun getCocktailById(id: String): Cocktail? {
-        kotlinx.coroutines.delay(CACHE_DELAY_MS)
+        delay(CACHE_DELAY_MS)
         return getCocktails().find { it.id == id }
     }
 }
