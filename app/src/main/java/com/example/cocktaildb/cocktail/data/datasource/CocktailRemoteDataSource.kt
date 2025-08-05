@@ -1,13 +1,13 @@
 package com.example.cocktaildb.cocktail.data.datasource
 
 import com.example.cocktaildb.cocktail.data.model.CocktailApiResponse
-import com.google.gson.Gson
+import com.example.cocktaildb.cocktail.data.model.Drink
 import java.io.BufferedReader
 import java.io.InputStreamReader
 import java.net.HttpURLConnection
 import java.net.URL
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
+import java.util.concurrent.Executors
+import org.json.JSONObject
 
 class CocktailRemoteDataSource : CocktailDataSource {
 
@@ -20,8 +20,10 @@ class CocktailRemoteDataSource : CocktailDataSource {
         private const val COCKTAILS_TO_TAKE = 4
     }
 
-    override suspend fun getCocktails(): List<com.example.cocktaildb.cocktail.data.model.Cocktail> {
-        return withContext(Dispatchers.IO) {
+    private val executor = Executors.newSingleThreadExecutor()
+
+    override fun getCocktails(callback: (List<com.example.cocktaildb.cocktail.data.model.Cocktail>) -> Unit) {
+        executor.execute {
             try {
                 val url = URL("$BASE_URL$SEARCH_ENDPOINT")
                 val connection = url.openConnection() as HttpURLConnection
@@ -40,22 +42,23 @@ class CocktailRemoteDataSource : CocktailDataSource {
                     }
                     reader.close()
 
-                    val gson = Gson()
-                    val apiResponse = gson.fromJson(response.toString(), CocktailApiResponse::class.java)
+                    val jsonObject = JSONObject(response.toString())
+                    val apiResponse = parseCocktailApiResponse(jsonObject)
 
-                    apiResponse.drinks?.drop(COCKTAILS_TO_SKIP)?.take(COCKTAILS_TO_TAKE)?.map { it.toCocktail() } ?: emptyList()
+                    val cocktails = apiResponse.drinks?.drop(COCKTAILS_TO_SKIP)?.take(COCKTAILS_TO_TAKE)?.map { it.toCocktail() } ?: emptyList()
+                    callback(cocktails)
                 } else {
-                    emptyList()
+                    callback(emptyList())
                 }
             } catch (e: Exception) {
                 e.printStackTrace()
-                emptyList()
+                callback(emptyList())
             }
         }
     }
 
-    override suspend fun getCocktailById(id: String): com.example.cocktaildb.cocktail.data.model.Cocktail? {
-        return withContext(Dispatchers.IO) {
+    override fun getCocktailById(id: String, callback: (com.example.cocktaildb.cocktail.data.model.Cocktail?) -> Unit) {
+        executor.execute {
             try {
                 val url = URL("${BASE_URL}lookup.php?i=$id")
                 val connection = url.openConnection() as HttpURLConnection
@@ -74,17 +77,51 @@ class CocktailRemoteDataSource : CocktailDataSource {
                     }
                     reader.close()
 
-                    val gson = Gson()
-                    val apiResponse = gson.fromJson(response.toString(), CocktailApiResponse::class.java)
+                    val jsonObject = JSONObject(response.toString())
+                    val apiResponse = parseCocktailApiResponse(jsonObject)
 
-                    apiResponse.drinks?.firstOrNull()?.toCocktail()
+                    val cocktail = apiResponse.drinks?.firstOrNull()?.toCocktail()
+                    callback(cocktail)
                 } else {
-                    null
+                    callback(null)
                 }
             } catch (e: Exception) {
                 e.printStackTrace()
-                null
+                callback(null)
             }
         }
+    }
+
+    private fun parseCocktailApiResponse(jsonObject: JSONObject): CocktailApiResponse {
+        val drinks = mutableListOf<Drink>()
+
+        if (jsonObject.has("drinks") && !jsonObject.isNull("drinks")) {
+            val drinksArray = jsonObject.getJSONArray("drinks")
+            for (i in 0 until drinksArray.length()) {
+                val drinkObject = drinksArray.getJSONObject(i)
+                val drink = Drink(
+                    idDrink = drinkObject.optString("idDrink"),
+                    strDrink = drinkObject.optString("strDrink"),
+                    strCategory = drinkObject.optString("strCategory"),
+                    strAlcoholic = drinkObject.optString("strAlcoholic"),
+                    strGlass = drinkObject.optString("strGlass"),
+                    strInstructions = drinkObject.optString("strInstructions"),
+                    strDrinkThumb = drinkObject.optString("strDrinkThumb"),
+                    strIngredient1 = drinkObject.optString("strIngredient1"),
+                    strIngredient2 = drinkObject.optString("strIngredient2"),
+                    strIngredient3 = drinkObject.optString("strIngredient3"),
+                    strIngredient4 = drinkObject.optString("strIngredient4"),
+                    strIngredient5 = drinkObject.optString("strIngredient5"),
+                    strMeasure1 = drinkObject.optString("strMeasure1"),
+                    strMeasure2 = drinkObject.optString("strMeasure2"),
+                    strMeasure3 = drinkObject.optString("strMeasure3"),
+                    strMeasure4 = drinkObject.optString("strMeasure4"),
+                    strMeasure5 = drinkObject.optString("strMeasure5")
+                )
+                drinks.add(drink)
+            }
+        }
+
+        return CocktailApiResponse(drinks)
     }
 }

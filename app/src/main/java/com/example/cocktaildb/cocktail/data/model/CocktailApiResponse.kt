@@ -1,42 +1,26 @@
 package com.example.cocktaildb.cocktail.data.model
 
-import com.google.gson.annotations.SerializedName
-
 data class CocktailApiResponse(
-    @SerializedName("drinks")
-    val drinks: List<CocktailApiModel>?
+    val drinks: List<Drink>?
 )
 
-data class CocktailApiModel(
-    @SerializedName("idDrink")
+data class Drink(
     val idDrink: String,
-    @SerializedName("strDrink")
     val strDrink: String,
-    @SerializedName("strCategory")
     val strCategory: String?,
-    @SerializedName("strDrinkThumb")
-    val strDrinkThumb: String?,
-    @SerializedName("strInstructions")
+    val strAlcoholic: String?,
+    val strGlass: String?,
     val strInstructions: String?,
-    @SerializedName("strIngredient1")
+    val strDrinkThumb: String?,
     val strIngredient1: String?,
-    @SerializedName("strIngredient2")
     val strIngredient2: String?,
-    @SerializedName("strIngredient3")
     val strIngredient3: String?,
-    @SerializedName("strIngredient4")
     val strIngredient4: String?,
-    @SerializedName("strIngredient5")
     val strIngredient5: String?,
-    @SerializedName("strMeasure1")
     val strMeasure1: String?,
-    @SerializedName("strMeasure2")
     val strMeasure2: String?,
-    @SerializedName("strMeasure3")
     val strMeasure3: String?,
-    @SerializedName("strMeasure4")
     val strMeasure4: String?,
-    @SerializedName("strMeasure5")
     val strMeasure5: String?
 ) {
     fun toCocktail(): Cocktail {

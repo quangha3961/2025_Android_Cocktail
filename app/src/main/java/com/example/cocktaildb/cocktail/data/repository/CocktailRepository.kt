@@ -4,19 +4,19 @@ import com.example.cocktaildb.cocktail.data.datasource.CocktailDataSource
 import com.example.cocktaildb.cocktail.data.model.Cocktail
 
 interface ICocktailRepository {
-    suspend fun getCocktails(): List<Cocktail>
-    suspend fun getCocktailById(id: String): Cocktail?
+    fun getCocktails(callback: (List<Cocktail>) -> Unit)
+    fun getCocktailById(id: String, callback: (Cocktail?) -> Unit)
 }
 
 class CocktailRepository(
     private val dataSource: CocktailDataSource
 ) : ICocktailRepository {
 
-    override suspend fun getCocktails(): List<Cocktail> {
-        return dataSource.getCocktails()
+    override fun getCocktails(callback: (List<Cocktail>) -> Unit) {
+        dataSource.getCocktails(callback)
     }
 
-    override suspend fun getCocktailById(id: String): Cocktail? {
-        return dataSource.getCocktailById(id)
+    override fun getCocktailById(id: String, callback: (Cocktail?) -> Unit) {
+        dataSource.getCocktailById(id, callback)
     }
 }
