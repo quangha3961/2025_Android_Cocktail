@@ -5,13 +5,13 @@ import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.androidtemplate.base.BaseActivity
 import com.example.androidtemplate.cocktail.data.datasource.CocktailLocalDataSource
+import com.example.androidtemplate.cocktail.data.model.Cocktail
 import com.example.androidtemplate.cocktail.data.repository.CocktailRepository
 import com.example.androidtemplate.cocktail.data.repository.ICocktailRepository
 import com.example.androidtemplate.cocktail.presentation.adapter.CocktailAdapter
 import com.example.androidtemplate.cocktail.presentation.contract.CocktailContract
 import com.example.androidtemplate.cocktail.presentation.presenter.CocktailPresenter
 import com.example.androidtemplate.databinding.ActivityCocktailBinding
-import com.example.androidtemplate.cocktail.data.model.Cocktail
 
 class CocktailActivity : BaseActivity<ActivityCocktailBinding>(), CocktailContract.View {
 
